@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>ta skwálwentn - Continuum of Care</title>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, height=device-height, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <style>
+    * {
+      font-family: "Lato";
+    }
+    p {
+      color: #636463;
+      font-size: 0.938rem;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+    }
+    a {
+      color: #d23929;
+    }
+    select {
+      background-color: #ffffff;
+      padding: 0.5rem;
+      border: 1px solid #353535;
+      border-radius: 4px;
+      font-size: 0.813rem;
+      font-weight: 400;
+      width: 100%;
+      color: #636463;
+      margin-bottom: 0.75rem;
+    }
+    body {
+      display: flex;
+      flex-direction: column;
+      margin: 1rem;
+      background-color: #f8f8f8;
+      height: fit-content !important;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .toggle-buttons {
+      display: flex;
+      margin-bottom: 20px;
+      border-radius: 4px;
+      border: 1px solid #d23929;
+      height: 28px;
+      align-items: center;
+    }
+    .toggle-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      cursor: pointer;
+      height: 28px;
+      color: #d23929;
+    }
+    .toggle-button.active {
+      background-color: #d23929;
+      color: white;
+    }
+    .section {
+      display: none;
+    }
+    .section.active {
+      display: block;
+    }
+    .option-card {
+      background-color: #f5f5f5;
+      padding: 1rem;
+      margin-top: 1rem;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+    }
+    .option-card h3 {
+      color: #353535;
+      font-size: 1rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+    .option-card p {
+      font-size: 0.875rem;
+      color: #636463;
+    }
+    .option-card a {
+      font-size: 0.875rem;
+      color: #d23929;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    .contact-info {
+      font-size: 0.813rem;
+      color: #636463;
+      margin-top: 1.5rem;
+      line-height: 1.5;
+    }
+    .contact-info a {
+      color: #d23929;
+      text-decoration: none;
+    }
+  </style>
+  <body>
+    <div class="container">
+      <p><strong>SUBSTANCE USE SERVICES</strong></p>
+      <p>
+        A safe, confidential space for support and understanding. We are here to
+        listen and help when you need it.
+      </p>
+      <div class="toggle-buttons">
+        <div class="toggle-button active" data-section="Outpatient">
+          Outpatient
+        </div>
+        <div class="toggle-button" data-section="Inpatient">Inpatient</div>
+      </div>
+      <div id="description">
+        <p class="section active" id="outpatient-description">
+          The Outpatient stream includes services and options that are available
+          for people who want to change their relationship with substances while
+          staying at home.
+        </p>
+        <p class="section" id="inpatient-description">
+          The Inpatient stream includes services and options that are available
+          for people who want to change their relationship with substances by
+          going to live away from home for a time.
+        </p>
+      </div>
+      <!-- Filter Fields -->
+      <select class="filter-select" id="filter-city">
+        <option value="">Select city</option>
+        <option value="Vancouver">Vancouver</option>
+        <option value="Burnaby">Burnaby</option>
+      </select>
+      <select class="filter-select" id="filter-age">
+        <option value="">Select age</option>
+        <option value="Under 18">Under 18</option>
+        <option value="18-25">18-25</option>
+        <option value="25+">25+</option>
+      </select>
+      <select class="filter-select" id="filter-service">
+        <option value="">Select a service</option>
+        <option value="Harm Reduction">Harm Reduction</option>
+        <option value="Withdrawal Management (Detox)">
+          Withdrawal Management (Detox)
+        </option>
+        <option value="Day Programs">Day Programs</option>
+        <option value="Community and Peer Support Groups">
+          Community and Peer Support Groups
+        </option>
+        <option value="Online and Phone Supports">
+          Online and Phone Supports
+        </option>
+        <option value="See a Doctor">See a Doctor</option>
+        <option value="Supports for Family and Friends">
+          Supports for Family and Friends
+        </option>
+      </select>
+      <select class="filter-select" id="filter-resource">
+        <option value="">Select a resource</option>
+        <option value="Safer Use Supplies">Safer Use Supplies</option>
+        <option value="Drug Checking">Drug Checking</option>
+        <option
+          value="Supervised Consumption Sites and Overdose Prevention Sites"
+        >
+          Supervised Consumption Sites and Overdose Prevention Sites
+        </option>
+        <option value="Naloxone Kits and Training">
+          Naloxone Kits and Training
+        </option>
+        <option value="Toxic Drug and Health Text Alerts">
+          Toxic Drug and Health Text Alerts
+        </option>
+        <option value="OAT Therapy">OAT Therapy</option>
+      </select>
+      <!-- Options Display -->
+      <div id="options-display" class="options-display"></div>
+      <!-- Contact Information -->
+      <div class="contact-info">
+        <p>
+          Do you need help navigating substance use support options for you or a
+          loved one? Call us to speak with our peer support workers.
+        </p>
+        <p>
+          Eileen Gus at Yúustway health and wellness<br />
+          Phone: <a href="tel:604-982-7806">604-982-7806</a><br />
+          Email:
+          <a href="mailto:wellness@squamish.net">wellness@squamish.net</a>
+        </p>
+      </div>
+    </div>
+    <script>
+      const helpResources = [
+        {
+          region: "VANCOUVER",
+          age: "Under 18",
+          serviceLocation: "Outpatient",
+          serviceType: "Harm Reduction",
+          serviceTypeDescriptionShort:
+            "Harm reduction helps those who are using substances do so more safely",
+          serviceTypeDescriptionFull:
+            "The unregulated drug supply is unpredictable. Harm reduction involves a range of services and strategies to empower and support people to be safer while using substances.\nSafer use drug tips:\n- Never use alone. Use where help is available: with a friend, at an overdose prevention site, or using a phone or online service like Lifeguard, NORS, or Brave\n- Use one drug at a time. Start low and go slow.\n- Be aware of your health and tolerance. Your tolerance can be lower if you're sick, run down, haven't used for a while or are using a substance for the first time - this increases the risk of overdose even from your normal dose.",
+          resourceType: "Safer Use Supplies",
+          resourceTypeDescription:
+            "While nothing is completely safe, there are ways you can reduce your risk. Safe use supplies include sterile needles, syringes, cookers and water; alcohol swabs; tourniquets; crack pipes, pipe mouthpieces, pipe screens and push sticks; bowl/meth pipes; and personal sharps containers.",
+          regionDescription:
+            "VANCOUVER:\n- Free safer use supplies are available at all overdose prevention and supervised consumption sites (https://www.vch.ca/en/service/supervised-consumption-and-overdose-prevention-sites#short-description--6291)\n- Towards the Heart website site finder (https://towardtheheart.com/site-finder). Enter your address to find safer use supplies nearby. Click on Safer Sex and Drug Use Supplies to see your nearest options.",
+        },
+      ];
+      document.querySelectorAll(".toggle-button").forEach((button) => {
+        button.addEventListener("click", () => {
+          document
+            .querySelectorAll(".toggle-button")
+            .forEach((btn) => btn.classList.remove("active"));
+          document
+            .querySelectorAll(".section")
+            .forEach((section) => section.classList.remove("active"));
+          button.classList.add("active");
+          const section = button.dataset.section;
+          document
+            .getElementById(`${section}-description`)
+            .classList.add("active");
+          filterOptions();
+        });
+      });
+      document.querySelectorAll(".filter-select").forEach((select) => {
+        select.addEventListener("change", filterOptions);
+      });
+      function filterOptions() {
+        const selectedRegion = document.getElementById("filter-city").value;
+        const selectedAge = document.getElementById("filter-age").value;
+        const selectedService = document.getElementById("filter-service").value;
+        const selectedResource =
+          document.getElementById("filter-resource").value;
+        const selectedServiceLocation = document.querySelector(
+          ".toggle-button.active"
+        ).dataset.section;
+        const optionsDisplay = document.getElementById("options-display");
+        optionsDisplay.innerHTML = "";
+        helpResources.forEach((resource) => {
+          if (
+            (selectedRegion === "" || resource.region === selectedRegion) &&
+            (selectedAge === "" || resource.age === selectedAge) &&
+            (selectedService === "" ||
+              resource.serviceType === selectedService) &&
+            (selectedResource === "" ||
+              resource.resourceType === selectedResource) &&
+            resource.serviceLocation === selectedServiceLocation
+          ) {
+            const optionCard = document.createElement("div");
+            optionCard.className = "option-card";
+            const serviceDescriptionShort = document.createElement("p");
+            serviceDescriptionShort.textContent =
+              resource.serviceTypeDescriptionShort;
+            optionCard.appendChild(serviceDescriptionShort);
+            const readButton = document.createElement("button");
+            readButton.textContent = "Read Content";
+            readButton.style.display = "block";
+            readButton.style.marginTop = "0.5rem";
+            readButton.setAttribute(
+              "data-description",
+              resource.serviceTypeDescriptionShort
+            );
+            readButton.addEventListener("click", () => {
+              const descriptionToRead =
+                readButton.getAttribute("data-description");
+              if (window.Tts) {
+                window.Tts.speak(descriptionToRead);
+              } else {
+                console.log(
+                  "Text-to-Speech is not supported in this environment."
+                );
+                console.log("descriptionToRead");
+                console.log(descriptionToRead);
+                // TESTING ON BROWSER - REMOVE IN PRODUCTION
+                const speechSynthesis = window.speechSynthesis;
+                const utterance = new SpeechSynthesisUtterance(
+                  descriptionToRead
+                );
+                utterance.lang = "en-US";
+                speechSynthesis.speak(utterance);
+              }
+            });
+            optionCard.appendChild(readButton);
+            const expandButton = document.createElement("button");
+            expandButton.textContent = "Expand";
+            expandButton.style.display = "block";
+            expandButton.style.marginTop = "0.5rem";
+            expandButton.addEventListener("click", () => {
+              if (expandButton.textContent === "Expand") {
+                expandButton.textContent = "Collapse";
+                const fullDescription = document.createElement("p");
+                fullDescription.textContent =
+                  resource.serviceTypeDescriptionFull;
+                fullDescription.className = "fullDescription";
+                optionCard.appendChild(fullDescription);
+              } else {
+                expandButton.textContent = "Expand";
+                const fullDescription =
+                  optionCard.querySelector(".fullDescription");
+                if (fullDescription) {
+                  optionCard.removeChild(fullDescription);
+                }
+              }
+            });
+            optionCard.appendChild(expandButton);
+            const link = document.createElement("a");
+            link.textContent = "Learn more";
+            link.href = "#"; // Example link
+            link.style.display = "block";
+            link.style.marginTop = "0.5rem";
+            optionCard.appendChild(link);
+            optionsDisplay.appendChild(optionCard);
+          }
+        });
+      }
+      function readContent() {
+        const text = document.getElementById("descriptionShort").innerText;
+        window.ReactNativeWebView.postMessage(text);
+      }
+      filterOptions();
+    </script>
+  </body>
+</html>
