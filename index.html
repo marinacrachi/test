@@ -15,6 +15,9 @@
     />
   </head>
   <style>
+    :root {
+      --primary-color: #d23929;
+    }
     * {
       font-family: "Lato";
     }
@@ -26,7 +29,7 @@
       line-height: normal;
     }
     a {
-      color: #d23929;
+      color: var(--primary-color);
     }
     select {
       background-color: #ffffff;
@@ -42,20 +45,18 @@
     body {
       display: flex;
       flex-direction: column;
-      margin: 1rem;
       background-color: #f8f8f8;
       height: fit-content !important;
     }
     .container {
       max-width: 100%;
       margin: 0 auto;
-      padding: 20px;
     }
     .toggle-buttons {
       display: flex;
       margin-bottom: 20px;
       border-radius: 4px;
-      border: 1px solid #d23929;
+      border: 1px solid var(--primary-color);
       height: 28px;
       align-items: center;
     }
@@ -66,10 +67,10 @@
       flex: 1;
       cursor: pointer;
       height: 28px;
-      color: #d23929;
+      color: var(--primary-color);
     }
     .toggle-button.active {
-      background-color: #d23929;
+      background-color: var(--primary-color);
       color: white;
     }
     .section {
@@ -97,7 +98,7 @@
     }
     .option-card a {
       font-size: 0.875rem;
-      color: #d23929;
+      color: var(--primary-color);
       text-decoration: underline;
       cursor: pointer;
     }
@@ -108,20 +109,29 @@
       line-height: 1.5;
     }
     .contact-info a {
-      color: #d23929;
+      color: var(--primary-color);
       text-decoration: none;
     }
     .video-section {
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
-    max-width: 410px;
-  }
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      max-width: 410px;
+    }
   </style>
   <body>
     <div class="container">
       <div class="video-section">
-      <iframe width="560" height="315" src="https://www.youtube.com/embed/MCBxt8SqCGw?si=aFwUXXCvsnW8Bo4M" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        <iframe
+          width="560"
+          height="315"
+          src="https://www.youtube.com/embed/MCBxt8SqCGw?si=aFwUXXCvsnW8Bo4M"
+          title="YouTube video player"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allowfullscreen
+        ></iframe>
       </div>
       <p><strong>SUBSTANCE USE SERVICES</strong></p>
       <p>
