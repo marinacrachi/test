@@ -426,9 +426,12 @@
               if (audio.paused) {
                 console.log("play");
                 // audio.play();
-                window.ReactNativeWebView.postMessage(
-                  JSON.stringify({ action: "play", src: resource.audioDescription })
-                );
+                const data = JSON.stringify({
+                  action: "play",
+                  src: resource.audioDescription,
+                });
+                console.log(data);
+                window.ReactNativeWebView.postMessage(data);
               } else {
                 console.log("pause");
                 // audio.pause();
