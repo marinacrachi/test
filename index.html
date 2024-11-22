@@ -229,7 +229,7 @@
           Bed-Based Stream
         </div>
       </div>
-      <div class="description" id="description">
+      <div id="description">
         <p class="section active" id="community-stream-description">
           The community stream includes services and options that are available
           for those who want to change their relationship with substances while
@@ -535,28 +535,16 @@
           optionsDisplay.innerHTML = `<p class="options-display-text">No options match the selected filters. Please try adjusting them.</p>`;
         }
       }
-
       function formatText(text) {
-        console.log("passou aqui", text);
         let formattedText = text.replace(
           /\((.*?)\)\[(https?:\/\/[^\s\]]+)\]/g,
           '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>'
         );
-        console.log("format 1");
-        console.log(formattedText);
-
         formattedText = formattedText.replace(
           /\[\[(.*?)\]\]/g,
           "<strong>$1</strong>"
         );
-        console.log("format 2");
-        console.log(formattedText);
-
         formattedText = formattedText.replace(/\n/g, "<br>");
-
-        console.log("format 3");
-        console.log(formattedText);
-
         return formattedText;
       }
     </script>
