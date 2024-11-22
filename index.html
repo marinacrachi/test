@@ -1,96 +1,565 @@
-import React, { useState, useLayoutEffect, useMemo } from 'react';
-import { useNavigation } from '@react-navigation/native';
-import { ScrollView, View, TouchableOpacity } from 'react-native';
-import { WebView } from 'react-native-webview';
-import { useTranslation } from 'react-i18next';
-import { Text } from 'native-base';
-
-import { useUserSettings } from '~contexts/UserSettingsContext';
-
-import styles from './styles';
-
-const SettingsMoreHelpScreen = () => {
-  const { t } = useTranslation();
-  const { setOptions } = useNavigation();
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const { hasCustomMoreOptions } = useUserSettings();
-
-  console.log(hasCustomMoreOptions?.emergencyResources);
-  const menuItems = useMemo(() => {
-    return [
-      {
-        title: 'helpResourcesPage.itemMenu1',
-        link: hasCustomMoreOptions?.emergencyResources
-          ? t('static.emergency')
-          : t('defaultStatic.emergency'),
-      },
-      {
-        title: 'helpResourcesPage.itemMenu2',
-        link: hasCustomMoreOptions?.emergencyResources
-          ? t('static.providers')
-          : t('defaultStatic.providers'),
-      },
-      {
-        title: 'helpResourcesPage.itemMenu3',
-        link: hasCustomMoreOptions?.emergencyResources
-          ? 'https://marinacrachi.github.io/test/'
-          : 'https://marinacrachi.github.io/test/',
-      },
-      {
-        title: 'helpResourcesPage.itemMenu4',
-        link: 'https://example4.com',
-      },
-    ];
-  }, [hasCustomMoreOptions]);
-  console.log('selectedIndex', selectedIndex);
-
-  useLayoutEffect(() => {
-    setOptions({
-      headerTitle: () => <Text>{t('helpResourcesPage.title')}</Text>,
-      headerTitleAlign: 'center',
-    });
-  }, [t, setOptions]);
-
-  return (
-    <ScrollView style={styles.scrollContainer} overScrollMode="never">
-      <View style={[styles.subContainer, styles.innerContainer]}>
-        <View style={styles.menuContainer}>
-          {menuItems.map((item, index) => (
-            <>
-              <TouchableOpacity
-                key={index}
-                onPress={() => setSelectedIndex(index)}
-                style={
-                  selectedIndex === index
-                    ? styles.menuItemSelected
-                    : styles.menuItem
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Continuum of Care</title>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, height=device-height, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <style>
+    :root {
+      --primary-color: #d23929;
+    }
+    * {
+      font-family: "Lato";
+    }
+    p {
+      color: #636463;
+      font-size: 0.938rem;
+      font-style: normal;
+      font-weight: 400;
+      margin: 0;
+    }
+    a {
+      color: var(--primary-color);
+    }
+    select {
+      background-color: #ffffff;
+      padding: 0.5rem;
+      border: 1px solid #353535;
+      border-radius: 4px;
+      font-size: 0.813rem;
+      font-weight: 400;
+      width: 100%;
+      color: #636463;
+      margin-bottom: 0.75rem;
+    }
+    body {
+      display: flex;
+      flex-direction: column;
+      background-color: #f8f8f8;
+      height: fit-content !important;
+    }
+    .container {
+      max-width: 100%;
+      margin: 0 18px;
+    }
+    .header {
+      gap: 8px;
+      display: flex;
+      flex-direction: column;
+      margin: 24px 0;
+    }
+    .toggle-buttons {
+      display: flex;
+      margin-bottom: 20px;
+      border-radius: 4px;
+      border: 1px solid var(--primary-color);
+      height: 28px;
+      align-items: center;
+    }
+    .toggle-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      cursor: pointer;
+      height: 28px;
+      color: var(--primary-color);
+    }
+    .toggle-button.active {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    .section {
+      display: none;
+      margin-bottom: 20px;
+    }
+    .section.active {
+      display: block;
+    }
+    .option-card {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      background-color: #f5f5f5;
+      padding: 1rem;
+      margin-top: 1rem;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+    }
+    .option-card h3 {
+      color: #353535;
+      font-size: 1rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+    .option-card p {
+      font-size: 0.875rem;
+      color: #636463;
+    }
+    .option-card a {
+      font-size: 0.875rem;
+      color: var(--primary-color);
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    .option-card-buttons {
+      display: flex;
+      justify-content: space-between;
+    }
+    .icon-button {
+      display: "block";
+      margin-top: 0.5rem;
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+    }
+    .option-card-title {
+      font-weight: bold;
+      font-size: 16px;
+    }
+    .option-card-description {
+      font-size: 14px;
+      text-align: left;
+    }
+    .expanded-description-container {
+      text-align: justify;
+    }
+    .expand-button-container {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: solid 1px var(--primary-color);
+    }
+    .expand-button {
+      display: block;
+      border: none;
+      background-color: transparent;
+      cursor: pointer;
+      color: var(--primary-color);
+      font-weight: bold;
+      padding: 0;
+    }
+    .contact-info {
+      font-size: 0.813rem;
+      color: #636463;
+      margin-top: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+    .contact-info a {
+      color: var(--primary-color);
+      text-decoration: none;
+    }
+    .contact-info-content {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .video-section {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      margin-top: 20px;
+      max-width: 410px;
+      gap: 16px;
+      margin-bottom: 48px;
+    }
+    .options-display-text {
+      padding: 120px 0;
+      font-size: 12px;
+      text-align: center;
+    }
+  </style>
+  <body>
+    <div class="container">
+      <div class="header">
+        <p><strong>SUBSTANCE USE SERVICES</strong></p>
+        <p>
+          This journey is unique for everyone - people can enter and exit at
+          many different points throughout their journey. It's not a straight
+          line, and the path will look different for everyone.
+        </p>
+      </div>
+      <div class="video-section">
+        <p>
+          <strong
+            >If you're new to your healing journey, watch this video:</strong
+          >
+        </p>
+        <iframe
+          height="315"
+          src="https://www.youtube.com/embed/MCBxt8SqCGw?si=aFwUXXCvsnW8Bo4M"
+          title="YouTube video player"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allowfullscreen
+        ></iframe>
+        <p>
+          <strong
+            >If you're currently on the path of your healing journey, watch this
+            video:</strong
+          >
+        </p>
+        <iframe
+          height="315"
+          src="https://www.youtube.com/embed/MCBxt8SqCGw?si=aFwUXXCvsnW8Bo4M"
+          title="YouTube video player"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allowfullscreen
+        ></iframe>
+      </div>
+      <div class="toggle-buttons">
+        <div class="toggle-button active" data-section="community-stream">
+          Community Stream
+        </div>
+        <div class="toggle-button" data-section="bed-based-stream">
+          Bed-Based Stream
+        </div>
+      </div>
+      <div id="description">
+        <p class="section active" id="community-stream-description">
+          The Community stream includes services and options that are available
+          for people who want to change their relationship with substances while
+          staying at home.
+        </p>
+        <p class="section" id="bed-based-stream-description">
+          The Bed-Based Stream stream includes services and options that are
+          available for people who want to change their relationship with
+          substances by going to live away from home for a time.
+        </p>
+      </div>
+      <!-- Filter Fields -->
+      <div class="filters-container">
+        <select class="filter-select" id="filter-city">
+          <option value="">Location</option>
+          <option value="Vancouver">Vancouver</option>
+          <option value="North Shore">North Shore</option>
+          <option value="Squamish Valley">Squamish Valley</option>
+        </select>
+        <select class="filter-select" id="filter-age">
+          <option value="">Select age</option>
+          <option value="Everyone">Everyone</option>
+          <option value="Youth">Youth</option>
+          <option value="Adult">Adult</option>
+        </select>
+        <select class="filter-select" id="filter-type-location">
+          <option value="">Select type of support</option>
+          <option value="Online">Online</option>
+          <option value="Phone">Phone</option>
+          <option value="In Person">In Person</option>
+        </select>
+        <select class="filter-select" id="filter-service">
+          <option value="">Select a service</option>
+          <option value="Harm Reduction">Harm Reduction</option>
+          <option value="Withdrawal Management (Detox)">
+            Withdrawal Management (Detox)
+          </option>
+          <option value="Day Programs">Day Programs</option>
+          <option value="Community and Peer Support Groups">
+            Community and Peer Support Groups
+          </option>
+          <option value="See a Doctor">See a Doctor</option>
+          <option value="Supports for Family and Friends">
+            Supports for Family and Friends
+          </option>
+        </select>
+        <select class="filter-select" id="filter-resource">
+          <option value="">Select a resource</option>
+          <option value="Safer Use Supplies">Safer Use Supplies</option>
+          <option value="Drug Checking">Drug Checking</option>
+          <option
+            value="Supervised Consumption Sites and Overdose Prevention Sites"
+          >
+            Supervised Consumption Sites and Overdose Prevention Sites
+          </option>
+          <option value="Naloxone Kits and Training">
+            Naloxone Kits and Training
+          </option>
+          <option value="Toxic Drug and Health Text Alerts">
+            Toxic Drug and Health Text Alerts
+          </option>
+          <option value="OAT Therapy">OAT Therapy</option>
+        </select>
+      </div>
+      <!-- Options Display -->
+      <div id="options-display" class="options-display">
+        <p class="options-display-text">
+          Options will appear here after applying the filters above.
+        </p>
+      </div>
+      <!-- Contact Information -->
+      <div class="contact-info">
+        <div class="contact-info-content">
+          <p>
+            <strong>
+              Do you need help navigating substance use support options for you
+              or a loved one? Please reach out to:
+            </strong>
+          </p>
+          <p>
+            Yúustway Community Health and Wellness<br />
+            Phone: <a href="tel:604-982-7806">604-982-7806</a><br />
+            Email:
+            <a href="mailto:wellness@squamish.net">wellness@squamish.net</a>
+          </p>
+          <p>
+            A Peer Support Worker<br />
+            Phone: <a href="tel:604-982-7806">604-982-7816</a>
+          </p>
+        </div>
+        <div class="contact-info-content">
+          <p>
+            Have a service you'd like to see added or a suggested update to
+            information? Please contact: <br />
+            <a href="mailto:hello@checkingin.co">hello@checkingin.co</a>
+          </p>
+        </div>
+      </div>
+    </div>
+    <script>
+      const helpResources = [
+        {
+          region: "VANCOUVER",
+          age: "Youth",
+          typeLocation: "In Person",
+          serviceLocation: "Bed-Based Stream",
+          serviceType: "Harm Reduction",
+          serviceTypeDescriptionShort:
+            "Harm reduction helps those who are using substances do so more safely",
+          serviceTypeDescriptionFull:
+            "The unregulated drug supply is unpredictable. Harm reduction involves a range of services and strategies to empower and support people to be safer while using substances.\n\nSafer use drug tips:\n- Never use alone. Use where help is available: with a friend, at an overdose prevention site, or using a phone or online service like Lifeguard, NORS, or Brave\n- Use one drug at a time. Start low and go slow.\n- Be aware of your health and tolerance. Your tolerance can be lower if you're sick, run down, haven't used for a while or are using a substance for the first time - this increases the risk of overdose even from your normal dose.",
+          resourceType: "Safer Use Supplies",
+          audioDescription:
+            "https://file-examples.com/storage/fef4e75e176737761a179bf/2017/11/file_example_MP3_700KB.mp3",
+          resourceTypeDescription:
+            "While nothing is completely safe, there are ways you can reduce your risk. Safe use supplies include sterile needles, syringes, cookers and water; alcohol swabs; tourniquets; crack pipes, pipe mouthpieces, pipe screens and push sticks; bowl/meth pipes; and personal sharps containers.",
+          regionDescription:
+            "- Free safer use supplies are available at all overdose prevention and supervised consumption sites (https://www.vch.ca/en/service/supervised-consumption-and-overdose-prevention-sites#short-description--6291)\n\n- Towards the Heart website site finder (https://towardtheheart.com/site-finder). Enter your address to find safer use supplies nearby. Click on Safer Sex and Drug Use Supplies to see your nearest options.",
+        },
+      ];
+      document.querySelectorAll(".toggle-button").forEach((button) => {
+        button.addEventListener("click", () => {
+          document
+            .querySelectorAll(".toggle-button")
+            .forEach((btn) => btn.classList.remove("active"));
+          document
+            .querySelectorAll(".section")
+            .forEach((section) => section.classList.remove("active"));
+          button.classList.add("active");
+          const section = button.dataset.section;
+          document
+            .getElementById(`${section}-description`)
+            .classList.add("active");
+          filterOptions();
+        });
+      });
+      document.querySelectorAll(".filter-select").forEach((select) => {
+        select.addEventListener("change", filterOptions);
+      });
+      function filterOptions() {
+        const selectedRegion = document.getElementById("filter-city").value;
+        const selectedAge = document.getElementById("filter-age").value;
+        const selectedTypeLocation = document.getElementById(
+          "filter-type-location"
+        ).value;
+        const selectedService = document.getElementById("filter-service").value;
+        const selectedResource =
+          document.getElementById("filter-resource").value;
+        const selectedServiceLocation = document
+          .querySelector(".toggle-button.active")
+          .textContent.trim();
+        const optionsDisplay = document.getElementById("options-display");
+        optionsDisplay.innerHTML = "";
+        const filteredResources = helpResources.filter((resource) => {
+          return (
+            (selectedRegion === "" ||
+              resource.region.toLowerCase() === selectedRegion.toLowerCase()) &&
+            (selectedAge === "" ||
+              resource.age.toLowerCase() === selectedAge.toLowerCase()) &&
+            (selectedTypeLocation === "" ||
+              resource.typeLocation.toLowerCase() ===
+                selectedTypeLocation.toLowerCase()) &&
+            (selectedService === "" ||
+              resource.serviceType.toLowerCase() ===
+                selectedService.toLowerCase()) &&
+            (selectedResource === "" ||
+              resource.resourceType.toLowerCase() ===
+                selectedResource.toLowerCase()) &&
+            resource.serviceLocation.toLowerCase() ===
+              selectedServiceLocation.toLowerCase()
+          );
+        });
+        if (filteredResources.length > 0) {
+          filteredResources.forEach((resource) => {
+            const audio = resource.audioDescription
+              ? new Audio(resource.audioDescription)
+              : null;
+            const optionCard = document.createElement("div");
+            optionCard.className = "option-card";
+            const optionCardButtons = document.createElement("div");
+            optionCardButtons.className = "option-card-buttons";
+            optionCard.appendChild(optionCardButtons);
+            const readLoudButton = document.createElement("button");
+            readLoudButton.className = "icon-button";
+            readLoudButton.setAttribute(
+              "data-description",
+              resource.serviceTypeDescriptionShort
+            );
+            readLoudButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M8.08502 9.4501L13.2 4.90135V19.0988L8.08502 14.5501C7.97627 14.4526 7.83377 14.4001 7.68752 14.4001H4.50002C4.00127 14.4001 3.60002 13.9988 3.60002 13.5001V10.5001C3.60002 10.0013 4.00127 9.6001 4.50002 9.6001H7.68752C7.83377 9.6001 7.97627 9.5476 8.08502 9.4501ZM13.2825 3.6001C13.0088 3.6001 12.7463 3.70135 12.54 3.88135L7.45877 8.4001H4.50002C3.34127 8.4001 2.40002 9.34135 2.40002 10.5001V13.5001C2.40002 14.6588 3.34127 15.6001 4.50002 15.6001H7.45877L12.54 20.1188C12.7463 20.2988 13.0088 20.4001 13.2825 20.4001C13.9013 20.4001 14.4 19.9013 14.4 19.2826V4.7176C14.4 4.09885 13.9013 3.6001 13.2825 3.6001ZM17.76 9.1201C17.4938 8.92135 17.1188 8.97385 16.92 9.2401C16.7213 9.50635 16.7738 9.88135 17.04 10.0801C17.625 10.5188 18 11.2163 18 12.0001C18 12.7838 17.625 13.4813 17.04 13.9201C16.7738 14.1188 16.7213 14.4938 16.92 14.7601C17.1188 15.0263 17.4938 15.0788 17.76 14.8801C18.6338 14.2238 19.2 13.1776 19.2 12.0001C19.2 10.8226 18.6338 9.77635 17.76 9.1201ZM22.8 12.0001C22.8 9.7651 21.78 7.76635 20.1825 6.44635V6.4501C19.9275 6.23635 19.5525 6.27385 19.3388 6.52885C19.125 6.78385 19.1625 7.1626 19.4175 7.3726C20.7525 8.47135 21.6 10.1363 21.6 12.0001C21.6 13.8638 20.7525 15.5288 19.4175 16.6313C19.1625 16.8413 19.1288 17.2201 19.3388 17.4751C19.5488 17.7301 19.9275 17.7638 20.1825 17.5538C21.78 16.2338 22.8 14.2351 22.8 12.0001Z" fill="#D23929"/>
+              </svg>`;
+            readLoudButton.addEventListener("click", () => {
+              console.log("play audio file");
+              if (audio.paused) {
+                console.log("play");
+                // audio.play();
+                window.ReactNativeWebView.postMessage(
+                  JSON.stringify({ action: "play", src: audio })
+                );
+              } else {
+                console.log("pause");
+                // audio.pause();
+                window.ReactNativeWebView.postMessage(
+                  JSON.stringify({ action: "pause" })
+                );
+              }
+            });
+            const shareButton = document.createElement("button");
+            shareButton.className = "icon-button";
+            shareButton.setAttribute(
+              "data-share",
+              resource.serviceTypeDescriptionShort
+            );
+            shareButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M17.2 9.59994C18.8575 9.59994 20.2 8.25744 20.2 6.59994V6.59619C20.2 4.93869 18.8575 3.59619 17.2 3.59619C15.5425 3.59619 14.2 4.93869 14.2 6.59619C14.2 6.96369 14.2638 7.31244 14.3838 7.63494L8.92002 10.3687C8.38377 9.54369 7.45752 8.99994 6.40002 8.99994C4.74252 8.99994 3.40002 10.3424 3.40002 11.9999C3.40002 13.6574 4.74252 14.9999 6.40002 14.9999C7.45752 14.9999 8.38377 14.4562 8.92002 13.6312L14.3838 16.3612C14.2638 16.6874 14.2 17.0362 14.2 17.3999C14.2 19.0574 15.5425 20.3999 17.2 20.3999C18.8575 20.3999 20.2 19.0574 20.2 17.3999C20.2 15.7424 18.8575 14.3999 17.2 14.3999C16.3413 14.3999 15.5688 14.7599 15.0213 15.3374L9.35877 12.5062C9.38502 12.3412 9.40002 12.1724 9.40002 11.9999C9.40002 11.8274 9.38877 11.6587 9.35877 11.4937L15.0213 8.66244C15.565 9.23994 16.3413 9.59994 17.2 9.59994ZM7.67282 13.2727C7.33525 13.6103 6.87741 13.7999 6.40002 13.7999C5.92263 13.7999 5.4648 13.6103 5.12723 13.2727C4.78967 12.9352 4.60002 12.4773 4.60002 11.9999C4.60002 11.5226 4.78967 11.0647 5.12723 10.7271C5.4648 10.3896 5.92263 10.1999 6.40002 10.1999C6.87741 10.1999 7.33525 10.3896 7.67282 10.7271C8.01038 11.0647 8.20002 11.5226 8.20002 11.9999C8.20002 12.4773 8.01038 12.9352 7.67282 13.2727ZM18.4728 5.32715C18.8104 5.66471 19 6.12255 19 6.59994C19 7.07733 18.8104 7.53517 18.4728 7.87273C18.1353 8.2103 17.6774 8.39994 17.2 8.39994C16.7226 8.39994 16.2648 8.2103 15.9272 7.87273C15.5897 7.53517 15.4 7.07733 15.4 6.59994C15.4 6.12255 15.5897 5.66471 15.9272 5.32715C16.2648 4.98958 16.7226 4.79994 17.2 4.79994C17.6774 4.79994 18.1353 4.98958 18.4728 5.32715ZM17.8889 19.0629C17.6705 19.1534 17.4364 19.1999 17.2 19.1999C16.9636 19.1999 16.7296 19.1534 16.5112 19.0629C16.2928 18.9725 16.0944 18.8399 15.9272 18.6727C15.7601 18.5056 15.6275 18.3072 15.537 18.0888C15.4466 17.8704 15.4 17.6363 15.4 17.3999C15.4 17.1636 15.4466 16.9295 15.537 16.7111C15.6275 16.4927 15.7601 16.2943 15.9272 16.1271C16.0944 15.96 16.2928 15.8274 16.5112 15.737C16.7296 15.6465 16.9636 15.5999 17.2 15.5999C17.4364 15.5999 17.6705 15.6465 17.8889 15.737C18.1072 15.8274 18.3057 15.96 18.4728 16.1271C18.64 16.2943 18.7725 16.4927 18.863 16.7111C18.9535 16.9295 19 17.1636 19 17.3999C19 17.6363 18.9535 17.8704 18.863 18.0888C18.7725 18.3072 18.64 18.5056 18.4728 18.6727C18.3057 18.8399 18.1072 18.9725 17.8889 19.0629Z" fill="#D23929"/>
+              </svg>`;
+            shareButton.addEventListener("click", () => {
+              const descriptionToShare = shareButton.getAttribute("data-share");
+              if (window.ReactNativeWebView) {
+                window.ReactNativeWebView.postMessage(descriptionToShare);
+              } else {
+                console.log(
+                  "Webview is not supported in this environment. Description to share: ",
+                  descriptionToShare
+                );
+              }
+            });
+            optionCardButtons.appendChild(readLoudButton);
+            optionCardButtons.appendChild(shareButton);
+            const serviceTitle = document.createElement("p");
+            serviceTitle.className = "option-card-title";
+            serviceTitle.textContent = resource.serviceType;
+            optionCard.appendChild(serviceTitle);
+            const serviceDescriptionShort = document.createElement("p");
+            serviceDescriptionShort.className = "option-card-description";
+            serviceDescriptionShort.textContent =
+              resource.serviceTypeDescriptionShort;
+            optionCard.appendChild(serviceDescriptionShort);
+            const expandButtonContainer = document.createElement("div");
+            expandButtonContainer.className = "expand-button-container";
+            optionCard.appendChild(expandButtonContainer);
+            const expandButtonText = document.createElement("button");
+            expandButtonText.className = "expand-button";
+            expandButtonText.textContent = "View full description";
+            const expandButtonIcon = document.createElement("button");
+            expandButtonIcon.className = "icon-button";
+            expandButtonIcon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 4.2002C12.33 4.2002 12.6 4.4702 12.6 4.8002V11.4002H19.2C19.53 11.4002 19.8 11.6702 19.8 12.0002C19.8 12.3302 19.53 12.6002 19.2 12.6002H12.6V19.2002C12.6 19.5302 12.33 19.8002 12 19.8002C11.67 19.8002 11.4 19.5302 11.4 19.2002V12.6002H4.79995C4.46995 12.6002 4.19995 12.3302 4.19995 12.0002C4.19995 11.6702 4.46995 11.4002 4.79995 11.4002H11.4V4.8002C11.4 4.4702 11.67 4.2002 12 4.2002Z" fill="#D23929"/>
+            </svg>`;
+            expandButtonContainer.appendChild(expandButtonText);
+            expandButtonContainer.appendChild(expandButtonIcon);
+            const expandedDescriptionContainer = document.createElement("div");
+            expandedDescriptionContainer.className =
+              "expanded-description-container";
+            optionCard.appendChild(expandedDescriptionContainer);
+            expandButtonContainer.addEventListener("click", () => {
+              if (expandButtonText.textContent === "View full description") {
+                expandButtonText.textContent = "Collapse";
+                expandButtonIcon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M19.2 12.5999C19.53 12.5999 19.8 12.3299 19.8 11.9999C19.8 11.6699 19.53 11.3999 19.2 11.3999H4.8C4.47 11.3999 4.2 11.6699 4.2 11.9999C4.2 12.3299 4.47 12.5999 4.8 12.5999H19.2Z" fill="#D23929"/>
+              </svg>`;
+                const fullDescription = document.createElement("p");
+                fullDescription.className = "full-description";
+                fullDescription.innerHTML = formatText(
+                  resource.serviceTypeDescriptionFull
+                );
+                expandedDescriptionContainer.appendChild(fullDescription);
+              } else {
+                expandButtonText.textContent = "View full description";
+                expandButtonIcon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M12 4.2002C12.33 4.2002 12.6 4.4702 12.6 4.8002V11.4002H19.2C19.53 11.4002 19.8 11.6702 19.8 12.0002C19.8 12.3302 19.53 12.6002 19.2 12.6002H12.6V19.2002C12.6 19.5302 12.33 19.8002 12 19.8002C11.67 19.8002 11.4 19.5302 11.4 19.2002V12.6002H4.79995C4.46995 12.6002 4.19995 12.3302 4.19995 12.0002C4.19995 11.6702 4.46995 11.4002 4.79995 11.4002H11.4V4.8002C11.4 4.4702 11.67 4.2002 12 4.2002Z" fill="#D23929"/>
+              </svg>`;
+                const fullDescription =
+                  expandedDescriptionContainer.querySelector(
+                    ".full-description"
+                  );
+                if (fullDescription) {
+                  expandedDescriptionContainer.removeChild(fullDescription);
                 }
-              >
-                <Text
-                  style={
-                    selectedIndex === index
-                      ? styles.menuItemTextSelected
-                      : styles.menuItemText
-                  }
-                >
-                  {t(item.title)}
-                </Text>
-              </TouchableOpacity>
-              {index < menuItems.length - 1 && <View style={styles.divider} />}
-            </>
-          ))}
-        </View>
+              }
+            });
+            const resourceType = document.createElement("p");
+            resourceType.className = "option-card-title";
+            resourceType.textContent = resource.resourceType;
+            optionCard.appendChild(resourceType);
+            const resourceTypeDescription = document.createElement("p");
+            resourceTypeDescription.textContent =
+              resource.resourceTypeDescription;
+            optionCard.appendChild(resourceTypeDescription);
+            const region = document.createElement("p");
+            region.className = "option-card-title";
+            region.textContent = resource.region;
+            optionCard.appendChild(region);
+            const regionDescription = document.createElement("p");
+            regionDescription.className = "option-card-description";
+            regionDescription.innerHTML = resource.regionDescription.replace(
+              /\n/g,
+              "<br>"
+            );
+            optionCard.appendChild(regionDescription);
+            optionsDisplay.appendChild(optionCard);
+          });
+        } else {
+          optionsDisplay.innerHTML = `<p class="options-display-text">No options match the selected filters. Please try adjusting them.</p>`;
+        }
+      }
 
-        {/* <View style={styles.webViewContainer}> */}
-        <WebView
-          source={{ uri: menuItems[selectedIndex].link }}
-          style={styles.webView}
-          startInLoadingState
-        />
-        {/* </View> */}
-      </View>
-    </ScrollView>
-  );
-};
+      function formatText(text) {
+        console.log("passou aqui", text);
+        let formattedText = text.replace(
+          /\((.*?)\)\[(https?:\/\/[^\s\]]+)\]/g,
+          '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>'
+        );
+        console.log("format 1");
+        console.log(formattedText);
 
-export default SettingsMoreHelpScreen;
+        formattedText = formattedText.replace(
+          /\[\[(.*?)\]\]/g,
+          "<strong>$1</strong>"
+        );
+        console.log("format 2");
+        console.log(formattedText);
+
+        formattedText = formattedText.replace(/\n/g, "<br>");
+
+        console.log("format 3");
+        console.log(formattedText);
+
+        return formattedText;
+      }
+    </script>
+  </body>
+</html>
