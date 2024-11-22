@@ -427,7 +427,7 @@
                 console.log("play");
                 // audio.play();
                 window.ReactNativeWebView.postMessage(
-                  JSON.stringify({ action: "play", src: audio })
+                  JSON.stringify({ action: "play", src: resource.audioDescription })
                 );
               } else {
                 console.log("pause");
