@@ -229,22 +229,28 @@
           Bed-Based Stream
         </div>
       </div>
-      <div id="description">
+      <div class="description" id="description">
         <p class="section active" id="community-stream-description">
-          The Community stream includes services and options that are available
-          for people who want to change their relationship with substances while
-          staying at home.
+          The community stream includes services and options that are available
+          for those who want to change their relationship with substances while
+          staying at home. <br /><br />All resources shared are free to access.
         </p>
         <p class="section" id="bed-based-stream-description">
-          The Bed-Based Stream stream includes services and options that are
-          available for people who want to change their relationship with
-          substances by going to live away from home for a time.
+          The bed-based stream includes services and options that are available
+          for those who want to change their relationship with substances by
+          going to live away from home for a time. <br /><br />Some services,
+          such as withdrawal management and transitional care, are free to
+          access. Others, such as treatment and second stage housing, may have a
+          client pay portion. The Squamish Nation Addictions Counsellor can help
+          to access funding to cover the cost of treatment, and most who access
+          second stage housing are on income assistance which can cover the cost
+          of room and board.
         </p>
       </div>
       <!-- Filter Fields -->
       <div class="filters-container">
         <select class="filter-select" id="filter-city">
-          <option value="">Location</option>
+          <option value="">Select location</option>
           <option value="Vancouver">Vancouver</option>
           <option value="North Shore">North Shore</option>
           <option value="Squamish Valley">Squamish Valley</option>
@@ -404,6 +410,7 @@
         });
         if (filteredResources.length > 0) {
           filteredResources.forEach((resource) => {
+            let audioAction = "play";
             const audio = resource.audioDescription
               ? new Audio(resource.audioDescription)
               : null;
@@ -422,23 +429,12 @@
               <path fill-rule="evenodd" clip-rule="evenodd" d="M8.08502 9.4501L13.2 4.90135V19.0988L8.08502 14.5501C7.97627 14.4526 7.83377 14.4001 7.68752 14.4001H4.50002C4.00127 14.4001 3.60002 13.9988 3.60002 13.5001V10.5001C3.60002 10.0013 4.00127 9.6001 4.50002 9.6001H7.68752C7.83377 9.6001 7.97627 9.5476 8.08502 9.4501ZM13.2825 3.6001C13.0088 3.6001 12.7463 3.70135 12.54 3.88135L7.45877 8.4001H4.50002C3.34127 8.4001 2.40002 9.34135 2.40002 10.5001V13.5001C2.40002 14.6588 3.34127 15.6001 4.50002 15.6001H7.45877L12.54 20.1188C12.7463 20.2988 13.0088 20.4001 13.2825 20.4001C13.9013 20.4001 14.4 19.9013 14.4 19.2826V4.7176C14.4 4.09885 13.9013 3.6001 13.2825 3.6001ZM17.76 9.1201C17.4938 8.92135 17.1188 8.97385 16.92 9.2401C16.7213 9.50635 16.7738 9.88135 17.04 10.0801C17.625 10.5188 18 11.2163 18 12.0001C18 12.7838 17.625 13.4813 17.04 13.9201C16.7738 14.1188 16.7213 14.4938 16.92 14.7601C17.1188 15.0263 17.4938 15.0788 17.76 14.8801C18.6338 14.2238 19.2 13.1776 19.2 12.0001C19.2 10.8226 18.6338 9.77635 17.76 9.1201ZM22.8 12.0001C22.8 9.7651 21.78 7.76635 20.1825 6.44635V6.4501C19.9275 6.23635 19.5525 6.27385 19.3388 6.52885C19.125 6.78385 19.1625 7.1626 19.4175 7.3726C20.7525 8.47135 21.6 10.1363 21.6 12.0001C21.6 13.8638 20.7525 15.5288 19.4175 16.6313C19.1625 16.8413 19.1288 17.2201 19.3388 17.4751C19.5488 17.7301 19.9275 17.7638 20.1825 17.5538C21.78 16.2338 22.8 14.2351 22.8 12.0001Z" fill="#D23929"/>
               </svg>`;
             readLoudButton.addEventListener("click", () => {
-              console.log("play audio file");
-              if (audio.paused) {
-                console.log("play");
-                // audio.play();
-                const data = JSON.stringify({
-                  action: "play",
-                  src: resource.audioDescription,
-                });
-                console.log(data);
-                window.ReactNativeWebView.postMessage(data);
-              } else {
-                console.log("pause");
-                // audio.pause();
-                window.ReactNativeWebView.postMessage(
-                  JSON.stringify({ action: "pause" })
-                );
-              }
+              const data = JSON.stringify({
+                action: audioAction,
+                src: resource.audioDescription,
+              });
+              window.ReactNativeWebView.postMessage(data);
+              audioAction = audioAction === "play" ? "pause" : "play";
             });
             const shareButton = document.createElement("button");
             shareButton.className = "icon-button";
